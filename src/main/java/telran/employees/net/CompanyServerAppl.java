@@ -24,13 +24,14 @@ public class CompanyServerAppl {
 		
 		Protocol protocol = new CompanyProtocol(company);
 		TcpServer tcpServer = new TcpServer(protocol, PORT);
+		
 		Thread newServer = new Thread(() -> tcpServer.run());
 		newServer.start();
 		Scanner lineScanner = new Scanner(System.in);
 		boolean serverRunning = true;
 		
 		while (serverRunning) {
-			System.out.println("Enter 'shutdown' to stop the server:");
+			System.out.println("Please enter 'shutdown' to stop the server:");
 			String answer = lineScanner.nextLine();
 			if ("shutdown".equalsIgnoreCase(answer)) {
 				
