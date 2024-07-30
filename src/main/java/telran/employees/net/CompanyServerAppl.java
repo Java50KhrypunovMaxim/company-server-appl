@@ -15,37 +15,43 @@ public class CompanyServerAppl {
 	public static void main(String[] args) {
 
 		Company company = new CompanyMapsImpl();
+		
 		try {
 			((Persistable) company).restore(FILE_NAME);
 		} catch (Exception e) {
 			System.out.println("Failed to restore company data.");
 		}
+		
 		Protocol protocol = new CompanyProtocol(company);
 		TcpServer tcpServer = new TcpServer(protocol, PORT);
 		Thread newServer = new Thread(() -> tcpServer.run());
 		newServer.start();
 		Scanner lineScanner = new Scanner(System.in);
 		boolean serverRunning = true;
+		
 		while (serverRunning) {
 			System.out.println("Enter 'shutdown' to stop the server:");
 			String answer = lineScanner.nextLine();
 			if ("shutdown".equalsIgnoreCase(answer)) {
+				
+				try {
+					((Persistable) company).save(FILE_NAME);
+					System.out.println("Company data was saved.");
+
+				} catch (Exception e) {
+					System.out.println("Failed to save company data.");
+				}
+				
 				tcpServer.shutdown();
 				serverRunning = false;
-				System.out.println("Server was stop");
+				System.out.println("Server was stoped");
 				break;
+				
 			} else {
 				System.out.println("Unknown command. Please enter 'shutdown' to stop the server.");
 			}
 		}
-
 		lineScanner.close();
-
-		try {
-			((Persistable) company).save(FILE_NAME);
-		} catch (Exception e) {
-			System.out.println("Failed to save company data.");
-		}
 	}
 
 }
