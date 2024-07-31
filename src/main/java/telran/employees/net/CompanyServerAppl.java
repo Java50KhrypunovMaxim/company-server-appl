@@ -45,7 +45,7 @@ public class CompanyServerAppl {
 				
 				tcpServer.shutdown();
 				serverRunning = false;
-				System.out.println("Server was stoped");
+	
 				break;
 				
 			} else {
